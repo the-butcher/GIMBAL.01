@@ -1,0 +1,17 @@
+:root {
+  --color-background: #42423a;
+  --color-background-transparent: 'rgba(77, 77, 68, 0.85)';
+  --color-text: #dadde0;
+  --font-text: "Courier Prime Sans", Consolas, Courier-New, monospace;
+}
+
+html, body {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  background-color: #000001;
+}
+
+a {
+  color: var(--color-text)
+}
