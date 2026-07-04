@@ -41,8 +41,9 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
 
 # needed evaluation
 
+- ✔️ correct resistor values for the voltage divider need to be determined
 - ✔️ powering the waveshare amoled through 5V
-- powering any single device through usb
+- ✔️powering any single device through usb
   - 〰️ puts 5V on the 12V line
   - 〰️ does not damage the stepdown converter
 - 〰️ test with schottky diode :: likely works
@@ -66,8 +67,8 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
   - M3 :: 43
   - EN :: 44
 
-- get a feeling for the type of torque achievable with 7.4V
-  ✔️ expose 5V and GND pins on PCB3
+✔️ get a feeling for the type of torque achievable with 7.4V :: appears reasonable
+✔️ expose 5V and GND pins on PCB3
 
 - ✔️ lvgl integration from platformio
 - ✔️ doublecheck simplefoc / seeed pin combinations
@@ -75,28 +76,33 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
 - ❓check if there is enough memory for OTA updates on all devices
 - ❓does OTA need to involve an http-server like in the Moth cCO2 sensor, or is there a simpler way?
 
-- power through the stepdown with ~8v
-  - at least waveshare and 1 seeed
+- ✔️ power through the stepdown with ~8v
+  - ✔️ at least waveshare and 1 seeed
 
 # order
 
-- one GM3506 motor to see if it works OK with the simplefoc board (assume it will then also work with the PCB3_3 board)
+- reichelt.de
+  - jst 3-pin https://www.reichelt.at/at/de/shop/produkt/jst_-_stiftleiste_90_1x3-polig_-_ph-185057
 
-# parts
+  - jst 3-pin https://www.reichelt.at/at/de/shop/produkt/jst_-_buchsengehaeuse_1x3-polig_-_ph-185042
 
-- ✔️ correct resistor values for the voltage divider need to be determined
-
-- digikey
-  - kurzhubtaster https://www.digikey.at/en/products/detail/te-connectivity-alcoswitch-switches/1825910-6/1632536
-  - mini joystick https://www.digikey.at/de/products/detail/adafruit-industries-llc/2765/6193582
-  - pin strip long pins
-  - jst ph extension cable https://www.digikey.at/de/products/detail/adafruit-industries-llc/1131
-  - rotary encoder https://www.digikey.at/de/products/detail/adafruit-industries-llc/5880/22596384
-
-- reichelt.de (2)
+- reichelt.de (ordered) https://eur04.safelinks.protection.outlook.com/?url=https%3A%2F%2Ftracking.dpd.de%2Fparcelstatus%3Fquery%3D01287056689046&data=05%7C02%7Channes.fleischer%40vertigis.com%7C7c17430917bb4739f4a608ded840f29f%7Ced9114d4e20642bb86371112932f3d50%7C1%7C0%7C639185970608062958%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=bx%2F96%2F3kX%2BiRX02Maizv4D4iRfpFSMStrNLffbjunPU%3D&reserved=0
   - jst ph stecker https://www.reichelt.at/at/de/shop/produkt/jst_-_stiftleiste_gerade_1x4-polig_-_ph-185051
-  - jst ph crimpkontakte
+  - (jst ph crimpkontakte https://www.reichelt.at/at/de/shop/produkt/jst_-_crimpkontakt_buchse_-_ph-185071)
   - kondensator https://www.reichelt.at/at/de/shop/produkt/elko_radial_100_f_35v_rm2_5_1000h_105_c_20_-42401
+  - battery holders 18650
+  - battery 18650
+
+- iFlight (ordered) https://iflight-europe.shipping-portal.com/tracking/?tracking_number=53201907516&country=at&postal_code=1220&utm_source=sendcloud&utm_medium=email&utm_campaign=out_for_delivery&utm_content=tracking_button
+  - 3 GM3506 motors (see if it works OK with the simplefoc board (assume it will then also work with the PCB3_3 board))
+
+- digikey (ordered) https://www.ups.com/track?loc=de_AT&Requester=SBN&tracknum=1Z5674320402843215&AgreeToTermsAndConditions=yes&WT.z_eCTAid=ct1_eml_Tracking__ct1_eml_tra_eml_autoship&WT.z_edatesent=07022026/trackdetails
+  - kurzhubtaster https://www.digikey.at/en/products/detail/te-connectivity-alcoswitch-switches/1825910-6/1632536
+  - kurzhubtaster https://www.digikey.at/en/products/detail/te-connectivity-alcoswitch-switches/1-1825910-4/1632539
+  - mini joystick https://www.digikey.at/de/products/detail/adafruit-industries-llc/2765/6193582
+  - jst ph extension cable 4 pin https://www.digikey.at/en/products/detail/adafruit-industries-llc/3568/7672337
+  - jst ph extension cable 2 pin https://www.digikey.at/de/products/detail/adafruit-industries-llc/4714/13175532
+  - rotary encoder https://www.digikey.at/de/products/detail/adafruit-industries-llc/5880/22596384
 
 - reichelt.de (OK)
   - 4 battery holders https://www.reichelt.at/at/de/shop/produkt/batteriehalter_fuer_1_18350-213365

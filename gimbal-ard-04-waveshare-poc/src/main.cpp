@@ -83,15 +83,15 @@ void setup() {
 
 void loop() {
   //delay(1000);
-  //set_amoled_backlight(0xff);
+  //touchDisplaySetBrightness(0xff);
   //delay(1000);
-  //set_amoled_backlight(200);
+  //touchDisplaySetBrightness(200);
   //delay(1000);
-  //set_amoled_backlight(150);
+  //touchDisplaySetBrightness(150);
   //delay(1000);
-  //set_amoled_backlight(100);
+  //touchDisplaySetBrightness(100);
   //delay(1000);
-  //set_amoled_backlight(50);
+  //touchDisplaySetBrightness(50);
   //delay(1000);
-  //set_amoled_backlight(0);
+  //touchDisplaySetBrightness(0);
 }

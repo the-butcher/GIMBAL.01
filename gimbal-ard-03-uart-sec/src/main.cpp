@@ -12,7 +12,9 @@ BLDCDriver3PWM driver = BLDCDriver3PWM(GPIO_NUM_MOT_M1, GPIO_NUM_MOT_M2, GPIO_NU
 // 9Ω line resistance :: datasheet :: https://drive.google.com/file/d/1Lx8z6-s6LNnDAv-dHjBgaFPU_OW8bgx9/view
 // y-connection :: datasheet :: https://drive.google.com/file/d/1Lx8z6-s6LNnDAv-dHjBgaFPU_OW8bgx9/view
 // 9 / 2 :: https://docs.simplefoc.com/phase_resistance
-BLDCMotor motor = BLDCMotor(7, 4.5f, 230.0f); // 9Ω / 2 // , 0.001f
+// BLDCMotor motor = BLDCMotor(7, 4.5f, 230.0f); // GM2804 - 9Ω / 2 // , 0.001f
+BLDCMotor motor = BLDCMotor(11, 5.6f / 2.0f, 185.0F); // GM3506 - https://community.simplefoc.com/t/how-many-pole-pairs-does-a-gm3506-actually-have/4811/2
+// KV was ~184 at 1V, ~189 at 2V, ~160 at 5V
 
 Commander command = Commander(Serial);
 void doMotor(char* cmd) {
@@ -91,8 +93,8 @@ void setup(void) {
     delay(100);
     Serial.println("- sensor ready");
 
-    driver.voltage_power_supply = 12;
-    driver.voltage_limit = 6;
+    driver.voltage_power_supply = 7.4;
+    driver.voltage_limit = 7.4;
     if (driver.init()) {
 
         delay(100);
@@ -102,25 +104,26 @@ void setup(void) {
 
         // ======================================================================================================
 
-        motor.voltage_sensor_align = 3;
-        motor.voltage_limit = 6;
+        motor.voltage_sensor_align = 3; // Limits voltage (and therefore current) during motor alignment. Value in Volts.
+        motor.voltage_limit = 7.4;
+        motor.current_limit = 1.0;
 
         // https://docs.simplefoc.com/velocity_loop
         motor.LPF_velocity.Tf = 0.05;
 
-        motor.PID_velocity.P = 0.05;
-        motor.PID_velocity.I = 1;
-        motor.PID_velocity.D = 0.0003;
+        motor.PID_velocity.P = 0.33;
+        motor.PID_velocity.I = 10.00;
+        motor.PID_velocity.D = 0.00;
 
-        // motor.P_angle.P = 30;
-        // motor.P_angle.I = 12;
-        // motor.P_angle.D = 0;
+        motor.P_angle.P = 30.00;
+        motor.P_angle.I = 20.00;
+        motor.P_angle.D = 0.10; // maybe too much (overshoots a lot when held out of position for a while)
 
         // estimated current control
         motor.controller = MotionControlType::angle;
         motor.torque_controller = TorqueControlType::estimated_current;
 
-        motor.updateCurrentLimit(0.8); // A
+        // motor.updateCurrentLimit(0.8); // A :: is set further up
         motor.target = 0.0;            // A - zero torque command to start
 
         // motor.useMonitoring(Serial);

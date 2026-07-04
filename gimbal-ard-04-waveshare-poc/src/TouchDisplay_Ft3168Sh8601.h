@@ -23,7 +23,6 @@
 #include "Display_Sh8601.h"
 #include "Touch_Ft3168.h"
 
-#include "lcd_config.h"
 #include "Define.h"
 #include "Orientation.h"
 
@@ -43,19 +42,16 @@ private:
 
 public:
 
-
-
     static void touchDisplayBegin(void);
-    static void example_lvgl_unlock(void);
-    static bool example_lvgl_lock(int timeout_ms);
-    static void example_lvgl_port_task(void* arg);
-    static void example_increase_lvgl_tick(void* arg);
-    static bool example_notify_lvgl_flush_ready(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_io_event_data_t* edata, void* user_ctx);
-    static void example_lvgl_flush_cb(lv_disp_drv_t* drv, const lv_area_t* area, lv_color_t* color_map);
-    static void example_lvgl_rounder_cb(struct _lv_disp_drv_t* disp_drv, lv_area_t* area);
-
-    static void example_lvgl_touch_cb(lv_indev_drv_t* drv, lv_indev_data_t* data);
-    static esp_err_t set_amoled_backlight(uint8_t brig);
+    static bool touchDisplayAcquireLock(int timeout_ms);
+    static void touchDisplayReleaseLock(void);
+    static void touchDisplayRunUiTask(void* arg);
+    static void touchDisplayIncreaseTick(void* arg);
+    static bool touchDisplayNotifyFlushReady(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_io_event_data_t* edata, void* user_ctx);
+    static void touchDisplayFlushCallback(lv_disp_drv_t* drv, const lv_area_t* area, lv_color_t* color_map);
+    static void touchDisplayRoundCallback(struct _lv_disp_drv_t* disp_drv, lv_area_t* area);
+    static void touchDisplayTouchCallback(lv_indev_drv_t* drv, lv_indev_data_t* data);
+    static esp_err_t touchDisplaySetBrightness(uint8_t brig);
 
 };
 

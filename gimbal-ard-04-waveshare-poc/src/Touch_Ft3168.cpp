@@ -1,10 +1,9 @@
 #include "Touch_Ft3168.h"
 #include "esp_err.h"
-#include "lcd_config.h"
 
 #define TEST_I2C_PORT I2C_NUM_0
 
-uint8_t Touch_Ft3168::writeBuffer(uint8_t addr, uint8_t reg, uint8_t* buf, uint8_t len) {
+uint8_t Touch_Ft3168::touchWriteBuffer(uint8_t addr, uint8_t reg, uint8_t* buf, uint8_t len) {
     uint8_t ret;
     uint8_t* pbuf = (uint8_t*)malloc(len + 1);
     pbuf[0] = reg;
@@ -17,7 +16,7 @@ uint8_t Touch_Ft3168::writeBuffer(uint8_t addr, uint8_t reg, uint8_t* buf, uint8
     return ret;
 }
 
-uint8_t Touch_Ft3168::readBuffer(uint8_t addr, uint8_t reg, uint8_t* buf, uint8_t len) {
+uint8_t Touch_Ft3168::touchReadBuffer(uint8_t addr, uint8_t reg, uint8_t* buf, uint8_t len) {
     uint8_t ret;
     ret = i2c_master_write_read_device(TEST_I2C_PORT, addr, &reg, 1, buf, len, 1000);
     return ret;
@@ -45,23 +44,23 @@ void Touch_Ft3168::touchBegin(void) {
     ESP_ERROR_CHECK(i2c_driver_install(TEST_I2C_PORT, conf.mode, 0, 0, 0));
 
     uint8_t data = 0x00;
-    Touch_Ft3168::writeBuffer(I2C_ADDR_FT3168, 0x00, &data, 1); //Switch to normal mode
+    Touch_Ft3168::touchWriteBuffer(I2C_ADDR__TOUCH, 0x00, &data, 1); //Switch to normal mode
 
 }
 
-uint8_t Touch_Ft3168::getTouch(uint16_t* x, uint16_t* y) {
+uint8_t Touch_Ft3168::touchGet(uint16_t* x, uint16_t* y) {
 
     uint8_t data;
     uint8_t buf[4];
-    Touch_Ft3168::readBuffer(I2C_ADDR_FT3168, 0x02, &data, 1);
+    Touch_Ft3168::touchReadBuffer(I2C_ADDR__TOUCH, 0x02, &data, 1);
     if (data) {
-        Touch_Ft3168::readBuffer(I2C_ADDR_FT3168, 0x03, buf, 4);
+        Touch_Ft3168::touchReadBuffer(I2C_ADDR__TOUCH, 0x03, buf, 4);
         *x = (((uint16_t)buf[0] & 0x0f) << 8) | (uint16_t)buf[1];
         *y = (((uint16_t)buf[2] & 0x0f) << 8) | (uint16_t)buf[3];
-        if (*x > EXAMPLE_LCD_H_RES)
-            *x = EXAMPLE_LCD_H_RES;
-        if (*y > EXAMPLE_LCD_V_RES)
-            *y = EXAMPLE_LCD_V_RES;
+        if (*x > TD_DIM________X)
+            *x = TD_DIM________X;
+        if (*y > TD_DIM________Y)
+            *y = TD_DIM________Y;
         return 1;
     }
     return 0;

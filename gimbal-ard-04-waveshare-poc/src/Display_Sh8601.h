@@ -138,7 +138,7 @@ private:
     static esp_err_t panel_sh8601_mirror(esp_lcd_panel_t* panel, bool mirror_x, bool mirror_y);
     static esp_err_t panel_sh8601_swap_xy(esp_lcd_panel_t* panel, bool swap_axes);
     static esp_err_t panel_sh8601_set_gap(esp_lcd_panel_t* panel, int x_gap, int y_gap);
-    static esp_err_t panel_sh8601_disp_on_off(esp_lcd_panel_t* panel, bool off);
+    static esp_err_t displayToggle(esp_lcd_panel_t* panel, bool off);
 
 public:
 
@@ -152,7 +152,7 @@ public:
      *      - ESP_OK: Success
      *      - Otherwise: Fail
      */
-    static esp_err_t esp_lcd_new_panel_sh8601(const esp_lcd_panel_io_handle_t io, const esp_lcd_panel_dev_config_t* panel_dev_config, esp_lcd_panel_handle_t* ret_panel);
+    static esp_err_t displayNewPanel(const esp_lcd_panel_io_handle_t io, const esp_lcd_panel_dev_config_t* panel_dev_config, esp_lcd_panel_handle_t* ret_panel);
 
 };
 

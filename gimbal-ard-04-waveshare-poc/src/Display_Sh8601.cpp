@@ -8,7 +8,7 @@ static const sh8601_lcd_init_cmd_t vendor_specific_init_default[] = {
         {0x53, (uint8_t[]) { 0x20 }, 1, 25},
 };
 
-esp_err_t Display_Sh8601::esp_lcd_new_panel_sh8601(const esp_lcd_panel_io_handle_t io, const esp_lcd_panel_dev_config_t* panel_dev_config, esp_lcd_panel_handle_t* ret_panel) {
+esp_err_t Display_Sh8601::displayNewPanel(const esp_lcd_panel_io_handle_t io, const esp_lcd_panel_dev_config_t* panel_dev_config, esp_lcd_panel_handle_t* ret_panel) {
 
     ESP_RETURN_ON_FALSE(io && panel_dev_config && ret_panel, ESP_ERR_INVALID_ARG, TAG, "invalid argument");
 
@@ -76,7 +76,7 @@ esp_err_t Display_Sh8601::esp_lcd_new_panel_sh8601(const esp_lcd_panel_io_handle
     sh8601->base.set_gap = panel_sh8601_set_gap;
     sh8601->base.mirror = panel_sh8601_mirror;
     sh8601->base.swap_xy = panel_sh8601_swap_xy;
-    sh8601->base.disp_on_off = panel_sh8601_disp_on_off;
+    sh8601->base.disp_on_off = displayToggle;
     *ret_panel = &(sh8601->base);
     ESP_LOGD(TAG, "new sh8601 panel @%p", sh8601);
 
@@ -277,7 +277,7 @@ esp_err_t Display_Sh8601::panel_sh8601_set_gap(esp_lcd_panel_t* panel, int x_gap
     return ESP_OK;
 }
 
-esp_err_t Display_Sh8601::panel_sh8601_disp_on_off(esp_lcd_panel_t* panel, bool on_off) {
+esp_err_t Display_Sh8601::displayToggle(esp_lcd_panel_t* panel, bool on_off) {
 
     sh8601_panel_t* sh8601 = __containerof(panel, sh8601_panel_t, base);
     esp_lcd_panel_io_handle_t io = sh8601->io;
