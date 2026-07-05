@@ -81,9 +81,10 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
 
 # order
 
+- - https://www.akkushop-austria.at/saft-ls14500cna-lithium-batterie-mit-axialem-drahtanschluss/?_gl=1*17uqf49*_up*MQ..*_gs*MQ..&gclid=CjwKCAjwgajSBhBEEiwASicJUwTq_1wnlCzgXyqn3ky7cO34TOTIagG5I4awopaq1XPuUpfcVMjlERoCpa0QAvD_BwE&gbraid=0AAAAADPwovdLEmpppwuAdsFjlhAtI4WCi
+
 - reichelt.de
   - jst 3-pin https://www.reichelt.at/at/de/shop/produkt/jst_-_stiftleiste_90_1x3-polig_-_ph-185057
-
   - jst 3-pin https://www.reichelt.at/at/de/shop/produkt/jst_-_buchsengehaeuse_1x3-polig_-_ph-185042
 
 - reichelt.de (ordered) https://eur04.safelinks.protection.outlook.com/?url=https%3A%2F%2Ftracking.dpd.de%2Fparcelstatus%3Fquery%3D01287056689046&data=05%7C02%7Channes.fleischer%40vertigis.com%7C7c17430917bb4739f4a608ded840f29f%7Ced9114d4e20642bb86371112932f3d50%7C1%7C0%7C639185970608062958%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=bx%2F96%2F3kX%2BiRX02Maizv4D4iRfpFSMStrNLffbjunPU%3D&reserved=0

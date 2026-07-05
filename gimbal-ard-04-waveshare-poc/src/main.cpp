@@ -3,7 +3,7 @@
 
 #include "Define.h"
 
-#include "TouchDisplay_Ft3168Sh8601.h"
+#include "touch_display/TouchDisplay_Ft3168Sh8601.h"
 #include "Orientation.h"
 // #include "UartSrv.h"
 #include "I2cSrvPri.h"
