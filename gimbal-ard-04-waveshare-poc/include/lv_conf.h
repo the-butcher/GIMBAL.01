@@ -14,6 +14,7 @@
 
 #include <stdint.h>
 
+
  /* ── Colour depth ──────────────────────────────────────── */
 #define LV_COLOR_DEPTH 16   /* 16-bit RGB565 – matches CO5300 default */
 
@@ -54,7 +55,8 @@
 // #define LV_FONT_MONTSERRAT_14 1
 // #define LV_FONT_MONTSERRAT_16 1
 // #define LV_FONT_MONTSERRAT_20 1
-// #define LV_FONT_DEFAULT &lv_font_montserrat_14
+#define LV_FONT_MONTSERRAT_30 1
+#define LV_FONT_DEFAULT &lv_font_montserrat_30
 
 /* ── Waveshare Demo ─────────────────── */
 // #define LV_USE_DEMO_WIDGETS 1

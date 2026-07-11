@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+#define USE____CANON true
+
 /**
  * primary (Wire) I2C, touch display
  */
@@ -66,5 +68,33 @@ typedef struct {
     float z;
     float w;
 } quaternion____t;
+
+typedef struct {
+    char ssid[64];
+    char pass[64];
+} network_t;
+
+const network_t NETWORK_INVAL = {
+    "",
+    ""
+};
+
+#if USE____CANON == true
+const network_t NETWORK_CCAPI = {
+    "EOSR100_CCEE7E-583_Canon0A",
+    "***"
+};
+const String CCAPI______BASE_URL = "http://192.168.1.2:8080/ccapi"; // Canon Eos R100 AP
+#else
+const network_t NETWORK_CCAPI = {
+    "the-butchers",
+    "***"
+};
+const String CCAPI______BASE_URL = "http://192.168.0.38:1880/endpoint"; // Node-Red in Homeassistant
+#endif
+
+const String CCAPI__________ROOT = "/";
+const String CCAPI_____MODE_DIAL = "/ver100/shooting/settings/shootingmodedial";
+const String CCAPI_SHUTTERBUTTON = "/ver100/shooting/control/shutterbutton";
 
 #endif

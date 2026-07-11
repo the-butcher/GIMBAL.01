@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------------------
+                             CCAPI(1.0.0b) Release Note
+                                   06/10/2019 
+                                   Canon Inc.
+------------------------------------------------------------------------------------------
+
+1. History
+
+06/10/2019      -CaneraControlAPI Reference v1.0.0 Rev.1.1 update
+
+05/16/2019	-Changed the size of the disk image file of CCAPI Activation Tool for Macintosh.
+
+03/15/2019	-CCAPI Activation Tool for Macintosh v1.0.1 update
+				-Fixed application crashes on startup. 
+
+02/25/2019	-First release 
+
+2. Usage of CCAPI
+
+Please refer to Operating Guide and Reference for the detail.
