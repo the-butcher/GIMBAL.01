@@ -81,24 +81,29 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
 
 # order
 
-- reichelt.de
-  - jst 3-pin https://www.reichelt.at/at/de/shop/produkt/jst_-_stiftleiste_90_1x3-polig_-_ph-185057
-  - jst 3-pin https://www.reichelt.at/at/de/shop/produkt/jst_-_buchsengehaeuse_1x3-polig_-_ph-185042
-  - taster a https://www.reichelt.at/at/de/shop/produkt/kurzhubtaster_printmontage_1_schliesser_3_5_x_6_x_4_3_mm-360040
-  - taster b https://www.reichelt.at/at/de/shop/produkt/kurzhubtaster_3_5x6mm_hoehe_5_0mm_1_schliesser-375532
-  - sd karte 64GB https://www.reichelt.at/at/de/shop/produkt/sdhx-speicherkarte_64gb-358253
+- mouser (ordered)
+  - adafruit power button https://www.mouser.at/de/ProductDetail/Adafruit/3104?qs=Fe2pGbCwd5c6gkNcLTXl8w%3D%3D&srsltid=AfmBOoqhgZuig5rAYAzx-hL_IUEwmz81FCs4EpL71mXRtzSOhzdhaPOD
+  - Kurzhubtaster https://www.mouser.at/de/ProductDetail/Apem/ADTS31NV?qs=iGLABakYCr%252BWGqajvikDZA%3D%3D
+  - JST PH 3 pin buchse https://www.mouser.at/de/ProductDetail/JST-Commercial/S3B-PH-K-SLFSN?qs=QpmGXVUTftHPTb%252BDMUkjfw%3D%3D
+  - JST PH 3 pin stecker https://www.mouser.at/de/ProductDetail/JST-Commercial/PHR-3?qs=uQD7XCvsSCM92rt8vZZnwg%3D%3D
+  - JST PH crimp kontakt https://www.mouser.at/de/ProductDetail/JST-Commercial/BPH-002T-P0.5S?qs=QpmGXVUTftEAmG%252BcKysqgg%3D%3D
 
-- reichelt.de (ordered) https://eur04.safelinks.protection.outlook.com/?url=https%3A%2F%2Ftracking.dpd.de%2Fparcelstatus%3Fquery%3D01287056689046&data=05%7C02%7Channes.fleischer%40vertigis.com%7C7c17430917bb4739f4a608ded840f29f%7Ced9114d4e20642bb86371112932f3d50%7C1%7C0%7C639185970608062958%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=bx%2F96%2F3kX%2BiRX02Maizv4D4iRfpFSMStrNLffbjunPU%3D&reserved=0
+- berrybase (ordered)
+  - https://www.berrybase.at/en/waveshare-esp32-s3r8-amoled-touch-display-1-64-240mhz-280x456-16mb-flash-6-achsen-imu-3-7v
+  - https://www.berrybase.at/pololu-big-pushbutton-power-switch-mit-verpolungsschutz-mp
+  - https://www.berrybase.at/sandisk-extreme-microsdxc-a2-uhs-i-u3-v30-170mb-s-speicherkarte-adapter-64gb
+
+- reichelt.de (OK)
   - jst ph stecker https://www.reichelt.at/at/de/shop/produkt/jst_-_stiftleiste_gerade_1x4-polig_-_ph-185051
   - (jst ph crimpkontakte https://www.reichelt.at/at/de/shop/produkt/jst_-_crimpkontakt_buchse_-_ph-185071)
   - kondensator https://www.reichelt.at/at/de/shop/produkt/elko_radial_100_f_35v_rm2_5_1000h_105_c_20_-42401
   - battery holders 18650
   - battery 18650
 
-- iFlight (ordered) https://iflight-europe.shipping-portal.com/tracking/?tracking_number=53201907516&country=at&postal_code=1220&utm_source=sendcloud&utm_medium=email&utm_campaign=out_for_delivery&utm_content=tracking_button
+- iFlight (OK)
   - 3 GM3506 motors (✔️ see if it works OK with the simplefoc board (assume it will then also work with the PCB3_3 board))
 
-- digikey (ordered) https://www.ups.com/track?loc=de_AT&Requester=SBN&tracknum=1Z5674320402843215&AgreeToTermsAndConditions=yes&WT.z_eCTAid=ct1_eml_Tracking__ct1_eml_tra_eml_autoship&WT.z_edatesent=07022026/trackdetails
+- digikey (OK)
   - kurzhubtaster https://www.digikey.at/en/products/detail/te-connectivity-alcoswitch-switches/1825910-6/1632536
   - kurzhubtaster https://www.digikey.at/en/products/detail/te-connectivity-alcoswitch-switches/1-1825910-4/1632539
   - mini joystick https://www.digikey.at/de/products/detail/adafruit-industries-llc/2765/6193582
@@ -120,8 +125,6 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
   - battery (akkushop.de) :: https://www.akkuteile.de/samsung-inr18650-29e_100621_1222
   - BMS (akkushop.de) :: 30.9 x 7.9 :: https://www.akkuteile.de/schutzelektronik/s2-bms/2s-pcb-keeppower-2s-0830-schutzelektronik_200504_1410
   - ladegerät 8.4V (akkushop.de) :: https://www.akkuteile.de/fuyuang-enerpower-2s-8-4v-7-2v-17w-cccv-li-ion-ladegeraet-2a-mit-dc-plug-5-5mm-2-1mm_400613_2379
-
-- gewindebohrer M5x0.5 für mini-schalter https://www.sportoutlet24.at/Hand-Gewindebohrer-Set-Satz-2Stk-M5x05-MF-HSS-DIN13-Rechts-Rechtsgewinde
 
 # encoder cables
 
