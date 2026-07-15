@@ -89,9 +89,10 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
   - JST PH crimp kontakt https://www.mouser.at/de/ProductDetail/JST-Commercial/BPH-002T-P0.5S?qs=QpmGXVUTftEAmG%252BcKysqgg%3D%3D
 
 - berrybase (ordered)
-  - https://www.berrybase.at/en/waveshare-esp32-s3r8-amoled-touch-display-1-64-240mhz-280x456-16mb-flash-6-achsen-imu-3-7v
+  - no https://www.berrybase.at/en/waveshare-esp32-s3r8-amoled-touch-display-1-64-240mhz-280x456-16mb-flash-6-achsen-imu-3-7v
   - https://www.berrybase.at/pololu-big-pushbutton-power-switch-mit-verpolungsschutz-mp
   - https://www.berrybase.at/sandisk-extreme-microsdxc-a2-uhs-i-u3-v30-170mb-s-speicherkarte-adapter-64gb
+  - sd cards
 
 - reichelt.de (OK)
   - jst ph stecker https://www.reichelt.at/at/de/shop/produkt/jst_-_stiftleiste_gerade_1x4-polig_-_ph-185051
