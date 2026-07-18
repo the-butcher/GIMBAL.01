@@ -14,8 +14,8 @@ const gpio_num_t GPIO_NUM___SCL0 = GPIO_NUM_48;
 /**
  * secondary (Wire1) I2C, orientation and rotary encoder, motors
  */
-const gpio_num_t GPIO_NUM___SDA1 = GPIO_NUM_15;
-const gpio_num_t GPIO_NUM___SCL1 = GPIO_NUM_16;
+const gpio_num_t GPIO_NUM___SDA1 = GPIO_NUM_6;
+const gpio_num_t GPIO_NUM___SCL1 = GPIO_NUM_5;
 
 const gpio_num_t GPIO_NUM____SW0 = GPIO_NUM_44;
 const gpio_num_t GPIO_NUM____SW1 = GPIO_NUM_43;

@@ -62,8 +62,8 @@ void setup() {
   delay(100);
   Serial.println("- touch display ready");
 
-  // wire1HasBegun = Wire1.begin(GPIO_NUM___SDA1, GPIO_NUM___SCL1, 0);
-  wire1HasBegun = false;
+  wire1HasBegun = Wire1.begin(GPIO_NUM___SDA1, GPIO_NUM___SCL1, 0);
+  // wire1HasBegun = false;
   if (wire1HasBegun) {
     SensorOrientation::powerup();
     delay(100);

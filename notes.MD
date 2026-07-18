@@ -27,6 +27,7 @@ https://forums.adafruit.com/viewtopic.php?t=190774
 
 - seeed https://wiki.seeedstudio.com/xiao_esp32s3_pin_multiplexing/
 - waveshare https://www.waveshare.com/ESP32-S3-Touch-AMOLED-1.64.htm
+- qtpy https://cdn-learn.adafruit.com/assets/assets/000/117/412/original/adafruit_products_Adafruit_QT_Py_ESP32-S3_Pinout_updated.png?1673269364
 
 # schleifring
 
@@ -51,7 +52,7 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
   ❓would be nice to have some LED indicator for the status of the power switch
   - maybe the rotary encoder rgb-led could serve that purpose
 - ✔️ availability of INPUT_PULLUP on the Waveshare switch pins, GPIO_44, GPIO_43, GPIO_45
-- ✔️ functionality of waveshare secondary I2C on SDA:15 and SCL:16 :: yes, simple test with the orientation sensor worked
+- ✔️ functionality of waveshare secondary I2C on SDA:06 and SCL:05 :: yes, simple test with the orientation sensor worked
 - ✔️ functionality of seeed secondary slace I2C SDA:01 and SCL:02
 - ✔️ i2c usage in place of uart :: ![alt text](images/i2c_poc_waveshare_orientation_seeed.jpg)
 - ✔️ functionality of SPI on the pins specified in the PCB3_2 board :: ![alt text](images/i2c_spi_poc_waveshare_orientation_seeed.jpg)
@@ -81,15 +82,14 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
 
 # order
 
-- mouser (ordered)
+- mouser (OK)
   - adafruit power button https://www.mouser.at/de/ProductDetail/Adafruit/3104?qs=Fe2pGbCwd5c6gkNcLTXl8w%3D%3D&srsltid=AfmBOoqhgZuig5rAYAzx-hL_IUEwmz81FCs4EpL71mXRtzSOhzdhaPOD
   - Kurzhubtaster https://www.mouser.at/de/ProductDetail/Apem/ADTS31NV?qs=iGLABakYCr%252BWGqajvikDZA%3D%3D
   - JST PH 3 pin buchse https://www.mouser.at/de/ProductDetail/JST-Commercial/S3B-PH-K-SLFSN?qs=QpmGXVUTftHPTb%252BDMUkjfw%3D%3D
   - JST PH 3 pin stecker https://www.mouser.at/de/ProductDetail/JST-Commercial/PHR-3?qs=uQD7XCvsSCM92rt8vZZnwg%3D%3D
   - JST PH crimp kontakt https://www.mouser.at/de/ProductDetail/JST-Commercial/BPH-002T-P0.5S?qs=QpmGXVUTftEAmG%252BcKysqgg%3D%3D
 
-- berrybase (ordered)
-  - no https://www.berrybase.at/en/waveshare-esp32-s3r8-amoled-touch-display-1-64-240mhz-280x456-16mb-flash-6-achsen-imu-3-7v
+- berrybase (OK)
   - https://www.berrybase.at/pololu-big-pushbutton-power-switch-mit-verpolungsschutz-mp
   - https://www.berrybase.at/sandisk-extreme-microsdxc-a2-uhs-i-u3-v30-170mb-s-speicherkarte-adapter-64gb
   - sd cards

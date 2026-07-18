@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <SimpleFOC.h>
+#include "RTClib.h"
 
 // #include "UartSrv.h"
 #include "I2cSrvSec.h"
@@ -15,6 +16,9 @@ BLDCDriver3PWM driver = BLDCDriver3PWM(GPIO_NUM_MOT_M1, GPIO_NUM_MOT_M2, GPIO_NU
 // BLDCMotor motor = BLDCMotor(7, 4.5f, 230.0f); // GM2804 - 9Ω / 2 // , 0.001f
 BLDCMotor motor = BLDCMotor(11, 5.6f / 2.0f, 185.0F); // GM3506 - https://community.simplefoc.com/t/how-many-pole-pairs-does-a-gm3506-actually-have/4811/2
 // KV was ~184 at 1V, ~189 at 2V, ~160 at 5V
+
+// TEMP
+RTC_PCF8523 rtc;
 
 Commander command = Commander(Serial);
 void doMotor(char* cmd) {
@@ -60,11 +64,39 @@ void runLoopTaskSec(void* pvParameters) {
         }
 
         // read sensor and update the internal variables
+        // sensor.update();
         // Serial.print(String(sensor.getAngle() * 180 / PI, 2));
         // Serial.print(", ");
         // Serial.println(String(sensor.getVelocity() * 180 / PI, 2));
 
         vTaskDelay(1);
+
+    }
+
+}
+
+void runLoopTaskTri(void* pvParameters) {
+
+    while (true) {
+
+        DateTime now = rtc.now();
+
+        Serial.print(now.year(), DEC);
+        Serial.print('/');
+        Serial.print(now.month(), DEC);
+        Serial.print('/');
+        Serial.print(now.day(), DEC);
+        Serial.print(" (");
+        Serial.print(now.dayOfTheWeek());
+        Serial.print(") ");
+        Serial.print(now.hour(), DEC);
+        Serial.print(':');
+        Serial.print(now.minute(), DEC);
+        Serial.print(':');
+        Serial.print(now.second(), DEC);
+        Serial.println();
+
+        vTaskDelay(10000);
 
     }
 
@@ -80,10 +112,10 @@ void setup(void) {
     // Serial.print(", core count: ");
     // Serial.println(SOC_CPU_CORES_NUM);
 
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(LED_BUILTIN, LOW); // ON
-    delay(1000);
-    digitalWrite(LED_BUILTIN, HIGH); // OFF
+    // pinMode(LED_BUILTIN, OUTPUT);
+    // digitalWrite(LED_BUILTIN, LOW); // ON
+    // delay(1000);
+    // digitalWrite(LED_BUILTIN, HIGH); // OFF
 
     // ======================================================================================================
 
@@ -93,8 +125,8 @@ void setup(void) {
     delay(100);
     Serial.println("- sensor ready");
 
-    driver.voltage_power_supply = 7.4;
-    driver.voltage_limit = 7.4;
+    driver.voltage_power_supply = 12.0;
+    driver.voltage_limit = 11.1;
     if (driver.init()) {
 
         delay(100);
@@ -158,6 +190,31 @@ void setup(void) {
         Serial.println("! driver fail");
     }
 
+    // begin wire as "master"
+    Wire.begin(SDA1, SCL1, 0);
+    if (!rtc.begin()) {
+        Serial.println("Couldn't find RTC");
+        Serial.flush();
+        while (1) delay(10);
+    }
+    rtc.start();
+    if (!rtc.initialized() || rtc.lostPower()) {
+        Serial.println("RTC is NOT initialized, let's set the time!");
+        // When time needs to be set on a new device, or after a power loss, the
+        // following line sets the RTC to the date & time this sketch was compiled
+        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+        // This line sets the RTC with an explicit date & time, for example to set
+        // January 21, 2014 at 3am you would call:
+        // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
+        //
+        // Note: allow 2 seconds after inserting battery or applying external power
+        // without battery before calling adjust(). This gives the PCF8523's
+        // crystal oscillator time to stabilize. If you call adjust() very quickly
+        // after the RTC is powered, lostPower() may still return true.
+    }
+
+
+
     // UartSrv::powerup();
     // delay(1000);
     // Serial.println("- uart ready");
@@ -176,6 +233,8 @@ void setup(void) {
     xTaskCreatePinnedToCore(runLoopTaskSec, "run-loop-sec", 10000, NULL, 2, NULL, 0); // run on secondary core
     Serial.println("- run-loop-sec");
 
+    xTaskCreatePinnedToCore(runLoopTaskTri, "run-loop-tri", 10000, NULL, 2, NULL, 0); // run on secondary core
+    Serial.println("- run-loop-tri");
 }
 
 
