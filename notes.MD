@@ -35,7 +35,14 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
 
 # next steps
 
-- draw arms
+- iterate on handle design
+  - 1/4 thread must meet a sufficiently torque resistant handle
+  - motor must be mounted sufficiently torque resistant
+  - shutter button half press design
+  - smooth motion of button next to wheel
+  - wheel opening smooth corners
+- find a camera cad model or create a rough model from own measurements
+- design arms in a DIYable way
 - think about cable management
   - check manuals of small gimbals
 - find a shop that does black aluminum anodizing (prize?)
