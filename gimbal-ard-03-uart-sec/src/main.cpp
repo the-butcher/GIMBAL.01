@@ -1,9 +1,9 @@
 #include <Arduino.h>
 #include <SimpleFOC.h>
-#include "RTClib.h"
 
 // #include "UartSrv.h"
-#include "I2cSrvSec.h"
+// #include "coms/I2cSrvSec.h"
+#include "coms/NowSrv.h"
 
 uint64_t totalLoopPriCount = 0;
 
@@ -17,14 +17,12 @@ BLDCDriver3PWM driver = BLDCDriver3PWM(GPIO_NUM_MOT_M1, GPIO_NUM_MOT_M2, GPIO_NU
 BLDCMotor motor = BLDCMotor(11, 5.6f / 2.0f, 185.0F); // GM3506 - https://community.simplefoc.com/t/how-many-pole-pairs-does-a-gm3506-actually-have/4811/2
 // KV was ~184 at 1V, ~189 at 2V, ~160 at 5V
 
-// TEMP
-RTC_PCF8523 rtc;
-
 Commander command = Commander(Serial);
 void doMotor(char* cmd) {
     command.motor(&motor, cmd);
 }
-void onPid(char* cmd) { command.pid(&motor.P_angle, cmd); }
+void onPidV(char* cmd) { command.pid(&motor.PID_velocity, cmd); }
+void onPidA(char* cmd) { command.pid(&motor.P_angle, cmd); }
 
 bool focReady = false;
 
@@ -55,11 +53,17 @@ void runLoopTaskSec(void* pvParameters) {
         //         motor.target = UartSrv::lastReadData.z;
         //     }
         // }
-        if (I2cSrvSec::hasNewData()) {
-            float readDataZ = I2cSrvSec::getLastReadData().z;
-            Serial.println(String(readDataZ, 2));
+        // if (I2cSrvSec::hasNewData()) {
+        //     float readDataZ = I2cSrvSec::getLastReadData().z;
+        //     Serial.println(String(readDataZ, 2));
+        //     if (focReady) {
+        //         motor.target = readDataZ;
+        //     }
+        // }
+        if (NowSrv::hasNewRecvData()) {
+            vector________t recvData = NowSrv::getLastRecvData();
             if (focReady) {
-                motor.target = readDataZ;
+                motor.target = -recvData.z;
             }
         }
 
@@ -79,24 +83,10 @@ void runLoopTaskTri(void* pvParameters) {
 
     while (true) {
 
-        DateTime now = rtc.now();
+        vector________t recvData = NowSrv::getLastRecvData();
+        // Serial.printf("{\"x\":%s,\"y\":%s,\"z\":%s} - %s - %s\n", String(recvData.x, 2), String(recvData.y, 2), String(recvData.z, 2), String(NowSrv::totalRecvCount), String(NowSrv::totalRecvCount * 1000 / (millis() - NowSrv::firstRecvMillis)));
 
-        Serial.print(now.year(), DEC);
-        Serial.print('/');
-        Serial.print(now.month(), DEC);
-        Serial.print('/');
-        Serial.print(now.day(), DEC);
-        Serial.print(" (");
-        Serial.print(now.dayOfTheWeek());
-        Serial.print(") ");
-        Serial.print(now.hour(), DEC);
-        Serial.print(':');
-        Serial.print(now.minute(), DEC);
-        Serial.print(':');
-        Serial.print(now.second(), DEC);
-        Serial.println();
-
-        vTaskDelay(10000);
+        vTaskDelay(1000);
 
     }
 
@@ -137,7 +127,7 @@ void setup(void) {
         // ======================================================================================================
 
         motor.voltage_sensor_align = 3; // Limits voltage (and therefore current) during motor alignment. Value in Volts.
-        motor.voltage_limit = 7.4;
+        motor.voltage_limit = 11.1;
         motor.current_limit = 1.0;
 
         // https://docs.simplefoc.com/velocity_loop
@@ -147,9 +137,9 @@ void setup(void) {
         motor.PID_velocity.I = 10.00;
         motor.PID_velocity.D = 0.00;
 
-        motor.P_angle.P = 30.00;
-        motor.P_angle.I = 20.00;
-        motor.P_angle.D = 0.10; // maybe too much (overshoots a lot when held out of position for a while)
+        // motor.P_angle.P = 30.00;
+        // motor.P_angle.I = 20.00;
+        // motor.P_angle.D = 0.10;
 
         // estimated current control
         motor.controller = MotionControlType::angle;
@@ -171,7 +161,8 @@ void setup(void) {
                 Serial.println("- foc ready");
 
                 command.add('M', doMotor, "Motor");
-                command.add('C', onPid, "my pid");
+                command.add('V', onPidV, "my pid v");
+                command.add('A', onPidA, "my pid a");
                 delay(100);
                 Serial.println("- command ready");
 
@@ -192,36 +183,16 @@ void setup(void) {
 
     // begin wire as "master"
     Wire.begin(SDA1, SCL1, 0);
-    if (!rtc.begin()) {
-        Serial.println("Couldn't find RTC");
-        Serial.flush();
-        while (1) delay(10);
-    }
-    rtc.start();
-    if (!rtc.initialized() || rtc.lostPower()) {
-        Serial.println("RTC is NOT initialized, let's set the time!");
-        // When time needs to be set on a new device, or after a power loss, the
-        // following line sets the RTC to the date & time this sketch was compiled
-        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-        // This line sets the RTC with an explicit date & time, for example to set
-        // January 21, 2014 at 3am you would call:
-        // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
-        //
-        // Note: allow 2 seconds after inserting battery or applying external power
-        // without battery before calling adjust(). This gives the PCF8523's
-        // crystal oscillator time to stabilize. If you call adjust() very quickly
-        // after the RTC is powered, lostPower() may still return true.
-    }
-
-
 
     // UartSrv::powerup();
     // delay(1000);
     // Serial.println("- uart ready");
 
-    I2cSrvSec::powerup();
+    // I2cSrvSec::powerup();
+    NowSrv::powerup();
     delay(1000);
-    Serial.println("- i2c ready");
+    // Serial.println("- i2c ready");
+    Serial.println("- espnow ready");
 
 
     if (focReady) {

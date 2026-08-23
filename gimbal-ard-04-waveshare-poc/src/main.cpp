@@ -3,29 +3,30 @@
 
 #include "Define.h"
 
-#include "disp/TouchDisplay_Ft3168Sh8601.h"
+#include "disp/TouchDisplay.h"
 #include "sens/SensorOrientation.h"
 #include "coms/ModuleWifi.h"
 // #include "UartSrv.h"
-#include "coms/I2cSrvPri.h"
+// #include "coms/I2cSrvPri.h"
+#include "coms/Nowsrv.h"
 
 uint64_t totalLoopPriCount = 0;
 vector________t data = { 0, 0, 0 };
 bool wire1HasBegun = false;
 
-float oz = 0.0;
-
+/**
+ * reads orientation sensor whenever a new message can be sent through espnow
+ */
 void runLoopTaskPri(void* pvParameters) {
 
   while (true) {
 
-    if (wire1HasBegun) {
+    if (wire1HasBegun) { // i2c (orientation ok && no previous message pending)
       SensorOrientation::read();
       vector________t orientation = SensorOrientation::getOrientation();
-      // orientation.z = oz;
-      // oz += 0.01;
       // UartSrv::sendData(orientation); // send data as fast as possible
-      I2cSrvPri::sendData(orientation);
+      // I2cSrvPri::sendData(orientation);
+      NowSrv::sendData(orientation);
     }
 
     vTaskDelay(10);
@@ -35,13 +36,16 @@ void runLoopTaskPri(void* pvParameters) {
 
 }
 
+/**
+ * reads orientation sensor every 1000ms to write it to serial
+ */
 void runLoopTaskSec(void* pvParameters) {
 
   while (true) {
 
     if (wire1HasBegun) {
-      vector________t orientation = SensorOrientation::getOrientation();
-      Serial.printf("{\"x\":%s,\"y\":%s,\"z\":%s}\n", String(orientation.x, 2), String(orientation.y, 2), String(orientation.z, 2));
+      vector________t sendData = SensorOrientation::getOrientation();
+      Serial.printf("{\"x\":%s,\"y\":%s,\"z\":%s} - %s - %s\n", String(sendData.x, 2), String(sendData.y, 2), String(sendData.z, 2), String(NowSrv::totalSendCount), String(NowSrv::totalSendCount * 1000 / (millis() - NowSrv::firstSendMillis)));
     }
 
     // Serial.print("totalLoopPriCount: ");
@@ -58,7 +62,7 @@ void setup() {
   delay(2000);
   Serial.println("- serial ready");
 
-  TouchDisplay_Ft3168Sh8601::touchDisplayBegin();
+  TouchDisplay::touchDisplayBegin();
   delay(100);
   Serial.println("- touch display ready");
 
@@ -77,7 +81,8 @@ void setup() {
   // Serial.println("- uart ready");
 
   if (wire1HasBegun) {
-    I2cSrvPri::powerup();
+    // I2cSrvPri::powerup();
+    NowSrv::powerup();
     delay(100);
     Serial.println("- i2c ready");
   } else {

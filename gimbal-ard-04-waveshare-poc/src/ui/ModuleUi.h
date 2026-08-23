@@ -22,8 +22,8 @@ private:
     static void handleScanButtonPress(lv_event_t* e);
     static void handleShutButtonPress(lv_event_t* e);
 
-    // static lv_obj_t* labelI;
-    // static lv_obj_t* sliderI;
+    static lv_obj_t* labelI;
+    static lv_obj_t* sliderI;
     // static void slider_event_cb(lv_event_t* e);
 
 public:

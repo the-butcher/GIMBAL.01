@@ -1,7 +1,7 @@
 #include "ModuleUi.h"
 
-// lv_obj_t* Ui::labelI;
-// lv_obj_t* Ui::sliderI;
+lv_obj_t* ModuleUi::labelI;
+lv_obj_t* ModuleUi::sliderI;
 
 lv_obj_t* ModuleUi::rootContainer;
 lv_obj_t* ModuleUi::wifiContainer;
@@ -71,7 +71,7 @@ void ModuleUi::handleCcApiConnect(bool connected) {
 
 void ModuleUi::setup() {
 
-    /*Create a container with ROW flex direction*/
+    // Create a container with ROW flex direction
     ModuleUi::rootContainer = lv_obj_create(lv_scr_act());
     lv_obj_set_size(ModuleUi::rootContainer, TD_DIM________X, TD_DIM________Y);
     lv_obj_align(ModuleUi::rootContainer, LV_ALIGN_TOP_LEFT, 0, 0);
@@ -108,29 +108,31 @@ void ModuleUi::setup() {
     // initial, pre connect, state
     ModuleUi::handleCcApiConnect(false);
 
-    // /*Create a slider in the center of the display*/
-    // Ui::sliderI = lv_slider_create(lv_scr_act());
-    // lv_slider_set_range(Ui::sliderI, -180, 180);
-    // lv_obj_set_width(Ui::sliderI, 200);                          /*Set the width*/
-    // lv_obj_center(Ui::sliderI);                                  /*Align to the center of the parent (screen)*/
-    // lv_obj_add_event_cb(Ui::sliderI, Ui::slider_event_cb, LV_EVENT_VALUE_CHANGED, NULL);     /*Assign an event function*/
+    /*Create a slider in the center of the display*/
+    ModuleUi::sliderI = lv_slider_create(ModuleUi::rootContainer);
+    lv_slider_set_range(ModuleUi::sliderI, -180, 180);
+    lv_obj_set_width(ModuleUi::sliderI, LV_PCT(100));
+    lv_obj_center(ModuleUi::sliderI);                                  /*Align to the center of the parent (screen)*/
+    // lv_obj_add_event_cb(ModuleUi::sliderI, ModuleUi::slider_event_cb, LV_EVENT_VALUE_CHANGED, NULL);     /*Assign an event function*/
 
-    // /*Create a label above the slider*/
-    // Ui::labelI = lv_label_create(lv_scr_act());
-    // lv_label_set_text(labelI, "0");
-    // lv_obj_align_to(Ui::labelI, Ui::sliderI, LV_ALIGN_OUT_TOP_MID, 0, -15);    /*Align top of the slider*/
+    /*Create a label above the slider*/
+    ModuleUi::labelI = lv_label_create(ModuleUi::rootContainer);
+    lv_label_set_text(labelI, "0");
+    lv_obj_align_to(ModuleUi::labelI, ModuleUi::sliderI, LV_ALIGN_OUT_TOP_MID, 0, -15);
+    lv_obj_set_width(ModuleUi::labelI, LV_PCT(100));
+    lv_obj_center(ModuleUi::labelI);
 
 
 }
 
 void ModuleUi::update() {
 
-    // vector________t orientation = Orientation::getOrientation();
-    // if (Ui::sliderI != nullptr) {
-    //     int gradZ = (int)round(orientation.z / PI * 180);
-    //     lv_slider_set_value(Ui::sliderI, gradZ, LV_ANIM_ON);
-    //     lv_label_set_text_fmt(Ui::labelI, "%" LV_PRId32, gradZ);
-    // }
+    vector________t orientation = SensorOrientation::getOrientation();
+    if (ModuleUi::sliderI != nullptr) {
+        double gradZ = orientation.z / PI * 180.0;
+        lv_slider_set_value(ModuleUi::sliderI, round(gradZ), LV_ANIM_ON);
+        lv_label_set_text(ModuleUi::labelI, String(gradZ, 2).c_str());
+    }
 
 
 }

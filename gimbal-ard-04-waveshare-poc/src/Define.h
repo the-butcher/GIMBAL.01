@@ -15,18 +15,11 @@ const gpio_num_t GPIO_NUM___SCL0 = GPIO_NUM_48;
  * secondary (Wire1) I2C, orientation and rotary encoder, motors
  */
 const gpio_num_t GPIO_NUM___SDA1 = GPIO_NUM_6;
-const gpio_num_t GPIO_NUM___SCL1 = GPIO_NUM_5;
+const gpio_num_t GPIO_NUM___SCL1 = GPIO_NUM_7;
 
 const gpio_num_t GPIO_NUM____SW0 = GPIO_NUM_44;
 const gpio_num_t GPIO_NUM____SW1 = GPIO_NUM_43;
 const gpio_num_t GPIO_NUM____SW2 = GPIO_NUM_45;
-
-/**
- * deprecated
- */
-const gpio_num_t GPIO_NUM_PRI_RX = GPIO_NUM_48;
-const gpio_num_t GPIO_NUM_PRI_TX = GPIO_NUM_43;
-const uint32_t   UART_BAUD_RATE = 115200;
 
 // TODO :: there must be multiple addresses for the three motors
 const uint8_t    I2C_ADDR__MOT_Y = 0x48; // 72
@@ -54,7 +47,8 @@ const uint16_t   TD_TASK___STACK = 4 * 1024;    // LVGL runs the task stack
 const uint8_t    TD_TASK____PRIO = 2;           // LVGL Running task priority
 
 // I2C address of touch display
-const uint8_t    I2C_ADDR__TOUCH = 0x38;
+const uint8_t        I2C_ADDR__TOUCH = 0x38;
+static const uint8_t NOW_ADDR_BRDCST[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
 typedef struct {
     float x;
