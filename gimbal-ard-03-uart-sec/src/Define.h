@@ -49,8 +49,7 @@ const gpio_num_t GPIO_NUM_I2C_SEC_SCL = GPIO_NUM_2;
 
 #if USE_____QTPY == true
 
-const gpio_num_t GPIO_NUM_ENC_CS = GPIO_NUM_9;
-
+const gpio_num_t GPIO_NUM_ENC_CS = GPIO_NUM_8;
 const gpio_num_t GPIO_NUM_MOT_M1 = GPIO_NUM_7;
 const gpio_num_t GPIO_NUM_MOT_M2 = GPIO_NUM_6;
 const gpio_num_t GPIO_NUM_MOT_M3 = GPIO_NUM_5;
@@ -65,6 +64,9 @@ const gpio_num_t GPIO_NUM_I2C_SEC_SDA = GPIO_NUM_18;
 const gpio_num_t GPIO_NUM_I2C_SEC_SCL = GPIO_NUM_17;
 
 #endif
+
+const uint8_t REGRESSION____ORDER = 2;
+const uint8_t REGRESSION_NUM_VALS = 32;
 
 const uint8_t I2C_SRV_SEC_ADDRESS = 0x48; // 72
 

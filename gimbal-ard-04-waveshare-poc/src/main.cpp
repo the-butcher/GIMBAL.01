@@ -19,7 +19,12 @@ bool wire1HasBegun = false;
  */
 void runLoopTaskPri(void* pvParameters) {
 
+  uint64_t millisM = 1;
+  uint64_t millisA;
+  uint64_t millisB;
   while (true) {
+
+    millisA = millis();
 
     if (wire1HasBegun) { // i2c (orientation ok && no previous message pending)
       SensorOrientation::read();
@@ -29,7 +34,9 @@ void runLoopTaskPri(void* pvParameters) {
       NowSrv::sendData(orientation);
     }
 
-    vTaskDelay(10);
+    millisB = millis();
+
+    vTaskDelay(max(millisM, 11 - (millisB - millisA)));
     totalLoopPriCount++;
 
   }

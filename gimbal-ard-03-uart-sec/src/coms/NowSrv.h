@@ -27,6 +27,8 @@ public:
     static bool hasNewRecvData();
     static vector________t getLastRecvData();
 
+    static uint64_t getRecvInterval();
+
 };
 
 #endif

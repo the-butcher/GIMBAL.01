@@ -80,3 +80,8 @@ void NowSrv::OnDataRecv(const uint8_t* mac, const uint8_t* incomingData, int len
     }
 
 }
+
+uint64_t NowSrv::getRecvInterval() {
+    // TODO as of actual receive interval
+    return 10L;
+}
