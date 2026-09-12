@@ -9,6 +9,7 @@
 #include "../sens/SensorOrientation.h"
 #include "../coms/ModuleWifi.h"
 #include "../coms/ModuleCcApi.h"
+#include "../coms/NowSrv.h"
 
 class ModuleUi {
 
@@ -24,6 +25,7 @@ private:
 
     static lv_obj_t* labelI;
     static lv_obj_t* sliderI;
+    static lv_obj_t* ledI;
     // static void slider_event_cb(lv_event_t* e);
 
 public:

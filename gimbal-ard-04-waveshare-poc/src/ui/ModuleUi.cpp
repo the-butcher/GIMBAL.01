@@ -2,6 +2,7 @@
 
 lv_obj_t* ModuleUi::labelI;
 lv_obj_t* ModuleUi::sliderI;
+lv_obj_t* ModuleUi::ledI;
 
 lv_obj_t* ModuleUi::rootContainer;
 lv_obj_t* ModuleUi::wifiContainer;
@@ -122,6 +123,9 @@ void ModuleUi::setup() {
     lv_obj_set_width(ModuleUi::labelI, LV_PCT(100));
     lv_obj_center(ModuleUi::labelI);
 
+    ModuleUi::ledI = lv_led_create(ModuleUi::rootContainer);
+    lv_obj_center(ModuleUi::ledI);
+    lv_led_off(ModuleUi::ledI);
 
 }
 
@@ -132,6 +136,14 @@ void ModuleUi::update() {
         double gradZ = orientation.z / PI * 180.0;
         lv_slider_set_value(ModuleUi::sliderI, round(gradZ), LV_ANIM_ON);
         lv_label_set_text(ModuleUi::labelI, String(gradZ, 2).c_str());
+    }
+
+    if (ModuleUi::ledI != nullptr) {
+        if (NowSrv::pndSendDataFlag) {
+            lv_led_on(ModuleUi::ledI);
+        } else {
+            lv_led_off(ModuleUi::ledI);
+        }
     }
 
 
