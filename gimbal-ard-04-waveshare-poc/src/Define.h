@@ -16,6 +16,14 @@ const gpio_num_t GPIO_NUM___SCL0 = GPIO_NUM_48;
  */
 const gpio_num_t GPIO_NUM___SDA1 = GPIO_NUM_6;
 const gpio_num_t GPIO_NUM___SCL1 = GPIO_NUM_7;
+const uint64_t   I2C_FREQ__WIRE1 = 400000; // 400kHz
+
+/**
+ * deprecated
+ */
+const gpio_num_t GPIO_NUM_PRI_RX = GPIO_NUM_8;
+const gpio_num_t GPIO_NUM_PRI_TX = GPIO_NUM_15;
+const uint32_t   UART_BAUD_RATE = 38400;
 
 const gpio_num_t GPIO_NUM____SW0 = GPIO_NUM_44;
 const gpio_num_t GPIO_NUM____SW1 = GPIO_NUM_43;

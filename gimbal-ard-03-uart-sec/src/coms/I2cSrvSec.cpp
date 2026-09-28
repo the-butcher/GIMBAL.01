@@ -8,7 +8,7 @@ bool I2cSrvSec::powerup() {
 
     Wire1.onReceive(I2cSrvSec::onReceive);
     Wire1.onRequest(I2cSrvSec::onRequest);
-    Wire1.begin(I2C_SRV_SEC_ADDRESS, GPIO_NUM_I2C_SEC_SDA, GPIO_NUM_I2C_SEC_SCL, 0);
+    // Wire1.begin(I2C_SRV_SEC_ADDRESS, GPIO_NUM_I2C_SEC_SDA, GPIO_NUM_I2C_SEC_SCL, 0);
 
     return true;
 

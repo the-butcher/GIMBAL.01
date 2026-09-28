@@ -55,10 +55,9 @@ const gpio_num_t GPIO_NUM_MOT_M2 = GPIO_NUM_6;
 const gpio_num_t GPIO_NUM_MOT_M3 = GPIO_NUM_5;
 const gpio_num_t GPIO_NUM_MOT_EN = GPIO_NUM_16;
 
-const gpio_num_t GPIO_NUM_SEC_RX = GPIO_NUM_17;
-const gpio_num_t GPIO_NUM_SEC_TX = GPIO_NUM_18;
-
-const uint32_t UART_BAUD_RATE = 115200;
+const gpio_num_t GPIO_NUM_SEC_RX = GPIO_NUM_17; // A1, second from usb-c end
+const gpio_num_t GPIO_NUM_SEC_TX = GPIO_NUM_18; // A0, first from usb-c end
+const uint32_t UART_BAUD_RATE = 38400;
 
 const gpio_num_t GPIO_NUM_I2C_SEC_SDA = GPIO_NUM_18;
 const gpio_num_t GPIO_NUM_I2C_SEC_SCL = GPIO_NUM_17;

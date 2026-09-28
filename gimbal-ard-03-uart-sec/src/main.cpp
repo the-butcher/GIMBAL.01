@@ -3,7 +3,8 @@
 
 // #include "coms/I2cSrvSec.h"
 #include "Define.h"
-#include "coms/NowSrv.h"
+// #include "coms/NowSrv.h"
+#include "coms/UartSrv.h"
 #include "util/AlphaBeta.h"
 #include "util/Gain.h"
 
@@ -24,7 +25,7 @@ float motorOffset = -1.672f; // command "O"
 const float VELOCITY_LIMIT = PI * 2 * 2;
 
 PIDController PID_angle_Y{ 12.000f, 0.010f, 0.020f, 10000.0f, VELOCITY_LIMIT }; // command "YP | YI | YD"
-uint64_t lastRecMicros;
+uint64_t lastRecvMicros;
 
 float yawFilterA = 0.550f; // 0.75 command "A"
 float yawFilterB = 0.200f; // 0.40 command "B"
@@ -98,7 +99,7 @@ void onPidV(char* cmd) { command.pid(&motor.PID_velocity, cmd); }
 void onPidY(char* cmd) { command.pid(&PID_angle_Y, cmd); }
 
 bool focReady = false;
-bool isLogVal = true;
+bool isLogVal = false;
 
 void IRAM_ATTR handleBootButton() {
     isLogVal = !isLogVal;
@@ -121,7 +122,7 @@ void runLoopTaskFoc(void* pvParameters) {
             motor.loopFOC();
 
             // time elapsed since
-            float dt = (micros() - lastRecMicros) * 1e-6f;
+            float dt = (micros() - lastRecvMicros) * 1e-6f;
             float predictSeconds = min(MAX_PREDICT_SECONDS, dt + signalLatencySeconds);
 
             float angleTarget = yawFilter.predict(predictSeconds) + motorOffset;
@@ -154,16 +155,20 @@ void runLoopTaskFoc(void* pvParameters) {
 
 }
 
+/**
+ * read from uart as fast as possible, update yaw filter with new data
+ */
 void runLoopTaskRecv(void* pvParameters) {
 
     while (true) {
 
         // read as fast as possible
-        if (NowSrv::hasNewRecvData()) {
+        UartSrv::readData();
+        if (UartSrv::hasNewRecvData()) {
             uint64_t now = micros();
-            float dt = (now - lastRecMicros) * 1e-6f;
-            lastRecMicros = now;
-            vector________t recvData = NowSrv::getLastRecvData();
+            float dt = (now - lastRecvMicros) * 1e-6f;
+            lastRecvMicros = now;
+            vector________t recvData = UartSrv::getLastRecvData();
             yawFilter.update(-recvData.z, dt);
         }
 
@@ -177,7 +182,7 @@ void runLoopTaskVals(void* pvParameters) {
 
     while (true) {
 
-        float dt = (micros() - lastRecMicros) * 1e-6f;
+        float dt = (micros() - lastRecvMicros) * 1e-6f;
         float predictSeconds = min(MAX_PREDICT_SECONDS, dt + signalLatencySeconds);
 
         float ab0 = yawFilter.predict(0) + motorOffset;
@@ -229,7 +234,7 @@ void runLoopTaskVals(void* pvParameters) {
             Serial.print(">vl2:");
             Serial.println(String(velocityCommand2, 3));
 
-            vTaskDelay(10);
+            vTaskDelay(100);
 
         } else {
 
@@ -237,7 +242,9 @@ void runLoopTaskVals(void* pvParameters) {
             // Serial.print(">plf:");
             // Serial.println(String(primaryLoopFrequency, 3));
 
-            vTaskDelay(5000);
+            Serial.printf("%s - %s\n", String(UartSrv::totalRecvCount), String(UartSrv::totalRecvCount * 1000.0 / (millis() - UartSrv::firstRecvMillis)));
+
+            vTaskDelay(1000);
 
         }
 
@@ -354,19 +361,9 @@ void setup(void) {
         Serial.println("! driver fail");
     }
 
-    // begin wire as "master"
-    Wire.begin(SDA1, SCL1, 0);
-
-    // UartSrv::powerup();
-    // delay(1000);
-    // Serial.println("- uart ready");
-
-    // I2cSrvSec::powerup();
-    NowSrv::powerup();
+    UartSrv::powerup();
     delay(1000);
-    // Serial.println("- i2c ready");
-    Serial.println("- espnow ready");
-
+    Serial.println("- uart ready");
 
     xTaskCreatePinnedToCore(runLoopTaskFoc, "run-loop-pri", 10000, NULL, 2, NULL, 1); // run on primary core
     Serial.println("- run-loop-foc");
@@ -377,7 +374,7 @@ void setup(void) {
     xTaskCreatePinnedToCore(runLoopTaskVals, "run-loop-tri", 10000, NULL, 2, NULL, 0); // run on secondary core
     Serial.println("- run-loop-val");
 
-    lastRecMicros = micros();
+    lastRecvMicros = micros();
     yawFilter.init(motorOffset); // seed with real starting angle
 
 }

@@ -3,6 +3,8 @@
 lv_obj_t* ModuleUi::labelI;
 lv_obj_t* ModuleUi::sliderI;
 lv_obj_t* ModuleUi::ledI;
+lv_obj_t* ModuleUi::encoderI;
+lv_meter_indicator_t* ModuleUi::indicatorI;
 
 lv_obj_t* ModuleUi::rootContainer;
 lv_obj_t* ModuleUi::wifiContainer;
@@ -123,6 +125,15 @@ void ModuleUi::setup() {
     lv_obj_set_width(ModuleUi::labelI, LV_PCT(100));
     lv_obj_center(ModuleUi::labelI);
 
+    ModuleUi::encoderI = lv_meter_create(ModuleUi::rootContainer);
+    lv_obj_center(ModuleUi::encoderI);
+    // lv_obj_set_width(ModuleUi::encoderI, LV_PCT(100));
+    lv_meter_scale_t * scale_min = lv_meter_add_scale(ModuleUi::encoderI);
+    lv_meter_set_scale_ticks(ModuleUi::encoderI, scale_min, 32, 1, 10, lv_palette_main(LV_PALETTE_GREY));
+    lv_meter_set_scale_range(ModuleUi::encoderI, scale_min, 0, 256, 360, 0);
+
+    ModuleUi::indicatorI = lv_meter_add_needle_line(ModuleUi::encoderI, scale_min, 4, lv_palette_main(LV_PALETTE_GREY), -10);
+    
     ModuleUi::ledI = lv_led_create(ModuleUi::rootContainer);
     lv_obj_center(ModuleUi::ledI);
     lv_led_off(ModuleUi::ledI);
@@ -131,7 +142,7 @@ void ModuleUi::setup() {
 
 void ModuleUi::update() {
 
-    vector________t orientation = SensorOrientation::getOrientation();
+    vector________t orientation = SensorBno085::getOrientation();
     if (ModuleUi::sliderI != nullptr) {
         double gradZ = orientation.z / PI * 180.0;
         lv_slider_set_value(ModuleUi::sliderI, round(gradZ), LV_ANIM_ON);
@@ -146,5 +157,8 @@ void ModuleUi::update() {
         }
     }
 
+    if (ModuleUi::encoderI != nullptr && ModuleUi::indicatorI != nullptr) {
+        lv_meter_set_indicator_value(ModuleUi::encoderI, ModuleUi::indicatorI, (SensorRotEnc::getPosition() + 256 * 100) % 256);
+    }
 
 }
