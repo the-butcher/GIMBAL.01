@@ -7,6 +7,9 @@
 #include "coms/UartSrv.h"
 #include "util/AlphaBeta.h"
 #include "util/Gain.h"
+#include "util/SignalUtil.h"
+#include "util/ComsUtil.h"
+
 
 const int PIN_BOOT = GPIO_NUM_0;
 uint64_t totalLoopPriCount = 0;
@@ -24,40 +27,28 @@ BLDCMotor motor = BLDCMotor(11, 5.6f / 2.0f, 185.0F); // GM3506 - https://commun
 float motorOffset = -1.672f; // command "O"
 const float VELOCITY_LIMIT = PI * 2 * 2;
 
-PIDController PID_angle_Y{ 12.000f, 0.010f, 0.020f, 10000.0f, VELOCITY_LIMIT }; // command "YP | YI | YD"
+PIDController PID_angle_Y{ 10.000f, 0.010f, 0.000f, 10000.0f, VELOCITY_LIMIT }; // command "YP | YI | YD"
 uint64_t lastRecvMicros;
 
-float yawFilterA = 0.550f; // 0.75 command "A"
-float yawFilterB = 0.200f; // 0.40 command "B"
-float yawFilterG = 0.003f; //
-AlphaBeta yawFilter(yawFilterA, yawFilterB, yawFilterG, true);
+float yawFilterA = 0.500f; // command "A"
+float yawFilterB = 0.100f; // command "B"
+float yawFilterG = 0.000f; // command "G"
+AlphaBeta yawFilter(yawFilterA, yawFilterB, yawFilterG, false);
 
 const float MAX_PREDICT_SECONDS = 0.100f; // max predict seconds to prevent runoff
-float signalLatencySeconds = 0.020f; // seconds, command "S"
+float signalLatencySeconds = 0.025f; // seconds, command "S"
 
-float f1 = 1.350; // ffg max gain, command "F"
-float f2 = 0.650; // ffg min gain, command "f"
-Gain gainFfg(f1, f2, 20, 2);
+float kff = 1.1f; // command "K"
+float lowPassFiltV = 0.020f; // command "L"
 
-float p1 = 1.100; // pid max gain, command "P"
-float p2 = 0.650; // pid min gain, command "p"
-Gain gainPid(p1, p2, 5.0, 2);
-
-float tf = 0.001;
-LowPassFilter lpfFfg(tf);
-LowPassFilter lpfPid(tf);
-
-float lowPassFiltV = 0.030f;
 Commander command = Commander(Serial);
 // void onMotor(char* cmd) { command.target(&motor, cmd); }
 void onLpfV(char* cmd) {
     command.scalar(&lowPassFiltV, cmd);
     motor.LPF_velocity.Tf = lowPassFiltV;
 }
-void onTf(char* cmd) {
-    command.scalar(&tf, cmd);
-    lpfFfg.Tf = tf;
-    lpfPid.Tf = tf;
+void onKff(char* cmd) {
+    command.scalar(&kff, cmd);
 }
 void onOffs(char* cmd) {
     command.scalar(&motorOffset, cmd);
@@ -77,24 +68,6 @@ void onYawG(char* cmd) {
 void onSls(char* cmd) {
     command.scalar(&signalLatencySeconds, cmd);
 }
-void onFg1(char* cmd) {
-    command.scalar(&f1, cmd);
-    gainFfg.setG1(f1);
-}
-void onFg2(char* cmd) {
-    command.scalar(&f2, cmd);
-    gainFfg.setG2(f2);
-}
-void onPg1(char* cmd) {
-    command.scalar(&p1, cmd);
-    gainPid.setG1(p1);
-}
-void onPg2(char* cmd) {
-    command.scalar(&p2, cmd);
-    gainPid.setG2(p2);
-}
-
-
 void onPidV(char* cmd) { command.pid(&motor.PID_velocity, cmd); }
 void onPidY(char* cmd) { command.pid(&PID_angle_Y, cmd); }
 
@@ -109,8 +82,6 @@ float velocityCommand1;
 float velocityCommand2;
 float velocityCommandT;
 float angleError;
-float valueFfg;
-float valuePid;
 
 void runLoopTaskFoc(void* pvParameters) {
 
@@ -121,33 +92,32 @@ void runLoopTaskFoc(void* pvParameters) {
 
             motor.loopFOC();
 
-            // time elapsed since
+            // time elapsed since last value
             float dt = (micros() - lastRecvMicros) * 1e-6f;
             float predictSeconds = min(MAX_PREDICT_SECONDS, dt + signalLatencySeconds);
 
             float angleTarget = yawFilter.predict(predictSeconds) + motorOffset;
             float velocTarget = yawFilter.getVelocity();
 
-            float acc = yawFilter.getAcceleration();
-            float ffg = gainFfg.getGain(abs(acc));
-            float pid = gainPid.getGain(abs(velocTarget));
-
-            valueFfg = lpfFfg(ffg);
-            valuePid = lpfPid(pid);
-
             angleError = angleTarget - motor.shaft_angle;
-            velocityCommand1 = PID_angle_Y(angleError) * valuePid;
-            velocityCommand2 = velocTarget * valueFfg;
-
-            // float velocity_command = PID_angle_Y(angle_error) + feedForwardGain * target_rate;
+            velocityCommand1 = PID_angle_Y(angleError);
+            velocityCommand2 = velocTarget * kff;
             velocityCommandT = constrain(velocityCommand1 + velocityCommand2, -motor.velocity_limit, motor.velocity_limit);
 
             motor.move(velocityCommandT);
             // motor.move();
 
+            command.run();
+
+        } else {
+
+            command.run();
+            
+            vTaskDelay(1);
+
         }
 
-        command.run();
+        
 
         totalLoopPriCount++;
 
@@ -168,8 +138,7 @@ void runLoopTaskRecv(void* pvParameters) {
             uint64_t now = micros();
             float dt = (now - lastRecvMicros) * 1e-6f;
             lastRecvMicros = now;
-            vector________t recvData = UartSrv::getLastRecvData();
-            yawFilter.update(-recvData.z, dt);
+            yawFilter.update(-UartSrv::getLastRecvData().z, dt);
         }
 
         vTaskDelay(1);
@@ -185,6 +154,7 @@ void runLoopTaskVals(void* pvParameters) {
         float dt = (micros() - lastRecvMicros) * 1e-6f;
         float predictSeconds = min(MAX_PREDICT_SECONDS, dt + signalLatencySeconds);
 
+        float abr = -UartSrv::getLastRecvData().z + motorOffset;
         float ab0 = yawFilter.predict(0) + motorOffset;
         float abi = yawFilter.predict(predictSeconds) + motorOffset;
 
@@ -193,54 +163,48 @@ void runLoopTaskVals(void* pvParameters) {
 
         if (isLogVal) {
 
-            // Serial.print(">ipv:");
-            // Serial.println(String(motor.PID_velocity.integral_prev, 3));
-
-            // Serial.print(">ipp:");
-            // Serial.println(String(PID_angle_Y.integral_prev, 3));
-
-            Serial.print(">fg2:");
-            Serial.println(String(valueFfg, 3));
-            Serial.print(">acc:");
-            Serial.println(String(acc, 3));
-
-            Serial.print(">pd2:");
-            Serial.println(String(valuePid, 3));
-            Serial.print(">vlp:");
-            Serial.println(String(vlc, 3));
-
+            Serial.print(">abr:");
+            Serial.println(String(abr, 3));
             Serial.print(">ab0:");
             Serial.println(String(ab0, 3));
             Serial.print(">abi:");
             Serial.println(String(abi, 3));
 
-            // sensor.update();
-            float rad = motor.shaft_angle;
-            Serial.print(">rad:");
-            Serial.println(String(rad, 3));
+            // Serial.print(">fg2:");
+            // Serial.println(String(valueFfg, 3));
+            // Serial.print(">acc:");
+            // Serial.println(String(acc, 3));
 
-            // Serial.print(">vls:");
-            // Serial.println(String(motor.shaft_velocity, 3));
+            // Serial.print(">pd2:");
+            // Serial.println(String(valuePid, 3));
+            // Serial.print(">vlp:");
+            // Serial.println(String(vlc, 3));
 
-            // Serial.print(">vlc:");
-            // Serial.println(String(velocityCommandT, 3));
 
-            Serial.print(">aer:");
-            Serial.println(String(angleError, 3));
 
-            Serial.print(">vl1:");
-            Serial.println(String(velocityCommand1, 3));
+            // // sensor.update();
+            // float rad = motor.shaft_angle;
+            // Serial.print(">rad:");
+            // Serial.println(String(rad, 3));
 
-            Serial.print(">vl2:");
-            Serial.println(String(velocityCommand2, 3));
+            // Serial.print(">aer:");
+            // Serial.println(String(angleError, 3));
 
-            vTaskDelay(100);
+            // Serial.print(">vl1:");
+            // Serial.println(String(velocityCommand1, 3));
+
+            // Serial.print(">vl2:");
+            // Serial.println(String(velocityCommand2, 3));
+
+            vTaskDelay(10);
 
         } else {
 
-            float primaryLoopFrequency = totalLoopPriCount * 1000.0f / millis(); // hZ
+            // float primaryLoopFrequency = totalLoopPriCount * 1000.0f / millis(); // hZ
             // Serial.print(">plf:");
             // Serial.println(String(primaryLoopFrequency, 3));
+
+            // Serial.println(String(UartSrv::totalRecvCount));
 
             Serial.printf("%s - %s\n", String(UartSrv::totalRecvCount), String(UartSrv::totalRecvCount * 1000.0 / (millis() - UartSrv::firstRecvMillis)));
 
@@ -261,18 +225,19 @@ void setup(void) {
     pinMode(PIN_BOOT, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(PIN_BOOT), handleBootButton, FALLING);
 
+    SignalUtil::powerup();
+    SignalUtil::setColor(0, 255, 0); // green;
+    
+    vector________t rot = { 0.0f, 0.0f, 0.0f };
+    uint32_t checksum = ComsUtil::calcCrcOfVector(rot);
+
+    Serial.print("CRC-8 Checksum: 0x");
+    Serial.println(checksum, HEX);
+
     // Serial.print("setup, core index: ");
     // Serial.print(xPortGetCoreID());
     // Serial.print(", core count: ");
     // Serial.println(SOC_CPU_CORES_NUM);
-
-    // pinMode(LED_BUILTIN, OUTPUT);
-    // digitalWrite(LED_BUILTIN, LOW); // ON
-    // delay(1000);
-    // digitalWrite(LED_BUILTIN, HIGH); // OFF
-
-    // ======================================================================================================
-    // recalculateFfg(); // calculate initial ffg values
 
     delay(100);
 
@@ -301,21 +266,15 @@ void setup(void) {
         motor.PID_velocity.P = 0.150;
         motor.PID_velocity.I = 0.001;
         motor.PID_velocity.D = 0.000;
-        // motor.feed_forward_current.q = 0.2;
         motor.LPF_velocity.Tf = lowPassFiltV; // https://docs.simplefoc.com/velocity_loop
         // motor.PID_velocity.limit = motor.current_limit;
         // motor.PID_velocity.output_ramp = 1000; // https://docs.simplefoc.com/position_control_example
-
-        Serial.print("rmp:");
-        Serial.println(String(motor.PID_velocity.output_ramp, 3));
 
         // estimated current control
         motor.controller = MotionControlType::velocity;
         motor.torque_controller = TorqueControlType::estimated_current;
 
         motor.target = 0.0;
-
-        // motor.useMonitoring(Serial);
 
         if (motor.init()) {
 
@@ -331,14 +290,7 @@ void setup(void) {
             command.add('O', onOffs, "my motor offset");
             command.add('L', onLpfV, "my low pass constant v");
             command.add('S', onSls, "my signal latency");
-
-            command.add('F', onFg1, "my f1");
-            command.add('f', onFg2, "my f2");
-            command.add('P', onPg1, "my p1");
-            command.add('p', onPg2, "my p2");
-
-            command.add('T', onTf, "my tf");
-
+            command.add('K', onKff, "my ffg gain");
 
             delay(100);
             Serial.println("- command ready");

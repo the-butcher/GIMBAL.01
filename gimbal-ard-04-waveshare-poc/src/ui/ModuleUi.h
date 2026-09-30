@@ -26,7 +26,7 @@ private:
 
     static lv_obj_t* labelI;
     static lv_obj_t* sliderI;
-    static lv_obj_t* ledI;
+    // static lv_obj_t* ledI;
     static lv_obj_t* encoderI;
     static lv_meter_indicator_t* indicatorI;
     

@@ -19,6 +19,7 @@ bool UartSrv::depower() {
 }
 
 bool UartSrv::sendData(vector________t sendData) {
+    sendData.crc = ComsUtil::calcCrcOfVector(sendData);
     UartSrv::uartSerial.write((uint8_t*)&sendData, sizeof(vector________t));
     UartSrv::uartSerial.write(0x0A); // end of line
     return true;

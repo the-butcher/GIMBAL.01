@@ -33,31 +33,57 @@ bool SensorBno085::read() {
     sh2_SensorValue_t sensorValue;
     if (SensorBno085::baseSensor.getSensorEvent(&sensorValue)) {
 
-        SensorBno085::totalReadCount++;
-        if (SensorBno085::firstReadMillis == 0) {
-            SensorBno085::firstReadMillis = millis();
+        if (sensorValue.sensorId == SH2_GAME_ROTATION_VECTOR) {
+
+            SensorBno085::quaternion.w = sensorValue.un.gameRotationVector.real;
+            SensorBno085::quaternion.x = sensorValue.un.gameRotationVector.i;
+            SensorBno085::quaternion.y = sensorValue.un.gameRotationVector.j;
+            SensorBno085::quaternion.z = sensorValue.un.gameRotationVector.k;
+
+            float norm2 = SensorBno085::quaternion.w * SensorBno085::quaternion.w +
+                          SensorBno085::quaternion.x * SensorBno085::quaternion.x +
+                          SensorBno085::quaternion.y * SensorBno085::quaternion.y +
+                          SensorBno085::quaternion.z * SensorBno085::quaternion.z;
+
+            if (fabs(norm2 - 1.0f) > 0.05f) {
+                // invalid sample: discard and keep the last good orientation
+                Serial.print("! invalid quaternion sample: norm2 = ");
+                Serial.println(norm2, 5);
+                return false;
+            }
+
+            SensorBno085::totalReadCount++;
+            if (SensorBno085::firstReadMillis == 0) {
+                SensorBno085::firstReadMillis = millis();
+            }
+
+            SensorBno085::quaternionToEuler(SensorBno085::quaternion, &SensorBno085::orientation, false);
+
+            // if (abs(SensorBno085::orientation.z) < 0.0001f) {
+            //     Serial.print("last z is zero, x: ");
+            //     Serial.print(SensorBno085::orientation.x, 5);
+            //     Serial.print(", y: ");
+            //     Serial.print(SensorBno085::orientation.y, 5);
+            //     Serial.print(", z: ");
+            //     Serial.print(SensorBno085::orientation.z, 5);
+            //     Serial.print(", w: ");
+            //     Serial.print(SensorBno085::quaternion.w, 5);   
+            //     Serial.print(", x: ");
+            //     Serial.print(SensorBno085::quaternion.x, 5);
+            //     Serial.print(", y: ");
+            //     Serial.print(SensorBno085::quaternion.y, 5);
+            //     Serial.print(", z: ");
+            //     Serial.println(SensorBno085::quaternion.z, 5);   
+            // }
+
+            return true;    
+
+        } else {
+            return false; // wrong sensorId, not a game rotation vector
         }
 
-    //   Serial.print("Game Rotation Vector - r: ");
-    //   Serial.print(sensorValue.un.gameRotationVector.real);
-    //   Serial.print(" i: ");
-    //   Serial.print(sensorValue.un.gameRotationVector.i);
-    //   Serial.print(" j: ");
-    //   Serial.print(sensorValue.un.gameRotationVector.j);
-    //   Serial.print(" k: ");
-    //   Serial.println(sensorValue.un.gameRotationVector.k);
-
-        SensorBno085::quaternion.w = sensorValue.un.gameRotationVector.real;
-        SensorBno085::quaternion.x = sensorValue.un.gameRotationVector.i;   
-        SensorBno085::quaternion.y = sensorValue.un.gameRotationVector.j;
-        SensorBno085::quaternion.z = sensorValue.un.gameRotationVector.k;
-
-        SensorBno085::quaternionToEuler(SensorBno085::quaternion, &SensorBno085::orientation, false);
-
-        return true;
-
     } else {
-        return false;
+        return false; // no new sensor data available
     }
     
 }

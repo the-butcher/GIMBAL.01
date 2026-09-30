@@ -23,7 +23,7 @@ const uint64_t   I2C_FREQ__WIRE1 = 400000; // 400kHz
  */
 const gpio_num_t GPIO_NUM_PRI_RX = GPIO_NUM_8;
 const gpio_num_t GPIO_NUM_PRI_TX = GPIO_NUM_15;
-const uint32_t   UART_BAUD_RATE = 38400;
+const uint32_t   UART_BAUD_RATE = 115200;
 
 const gpio_num_t GPIO_NUM____SW0 = GPIO_NUM_44;
 const gpio_num_t GPIO_NUM____SW1 = GPIO_NUM_43;
@@ -62,6 +62,7 @@ typedef struct {
     float x;
     float y;
     float z;
+    uint8_t crc; // crc8 checksum of x, y, z, must be last field in struct  
 } vector________t;
 
 typedef struct {

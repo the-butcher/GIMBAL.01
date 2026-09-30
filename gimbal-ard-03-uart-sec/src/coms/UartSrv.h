@@ -4,6 +4,7 @@
 #include <Arduino.h>
 
 #include "Define.h"
+#include "util/ComsUtil.h"
 
 class UartSrv {
 
@@ -11,6 +12,7 @@ private:
     static HardwareSerial uartSerial;
     static vector________t lastRecvData;
     static bool newRecvDataFlag;
+    static SemaphoreHandle_t xMutex;
 
 
 public:

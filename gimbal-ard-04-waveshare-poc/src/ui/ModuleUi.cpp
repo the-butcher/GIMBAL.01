@@ -2,7 +2,7 @@
 
 lv_obj_t* ModuleUi::labelI;
 lv_obj_t* ModuleUi::sliderI;
-lv_obj_t* ModuleUi::ledI;
+// lv_obj_t* ModuleUi::ledI;
 lv_obj_t* ModuleUi::encoderI;
 lv_meter_indicator_t* ModuleUi::indicatorI;
 
@@ -134,9 +134,9 @@ void ModuleUi::setup() {
 
     ModuleUi::indicatorI = lv_meter_add_needle_line(ModuleUi::encoderI, scale_min, 4, lv_palette_main(LV_PALETTE_GREY), -10);
     
-    ModuleUi::ledI = lv_led_create(ModuleUi::rootContainer);
-    lv_obj_center(ModuleUi::ledI);
-    lv_led_off(ModuleUi::ledI);
+    // ModuleUi::ledI = lv_led_create(ModuleUi::rootContainer);
+    // lv_obj_center(ModuleUi::ledI);
+    // lv_led_off(ModuleUi::ledI);
 
 }
 
@@ -149,13 +149,13 @@ void ModuleUi::update() {
         lv_label_set_text(ModuleUi::labelI, String(gradZ, 2).c_str());
     }
 
-    if (ModuleUi::ledI != nullptr) {
-        if (NowSrv::pndSendDataFlag) {
-            lv_led_on(ModuleUi::ledI);
-        } else {
-            lv_led_off(ModuleUi::ledI);
-        }
-    }
+    // if (ModuleUi::ledI != nullptr) {
+    //     if (NowSrv::pndSendDataFlag) {
+    //         lv_led_on(ModuleUi::ledI);
+    //     } else {
+    //         lv_led_off(ModuleUi::ledI);
+    //     }
+    // }
 
     if (ModuleUi::encoderI != nullptr && ModuleUi::indicatorI != nullptr) {
         lv_meter_set_indicator_value(ModuleUi::encoderI, ModuleUi::indicatorI, (SensorRotEnc::getPosition() + 256 * 100) % 256);

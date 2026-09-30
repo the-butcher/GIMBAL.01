@@ -27,6 +27,7 @@
 //    M2 06 │O          O│ 36 SCK
 //    M3 05 │O          O│ 16 EN
 //          └────────────┘
+// https://learn.adafruit.com/adafruit-qt-py-esp32-s3/pinouts
 
 #if USE____SEEED == true
 
@@ -57,7 +58,7 @@ const gpio_num_t GPIO_NUM_MOT_EN = GPIO_NUM_16;
 
 const gpio_num_t GPIO_NUM_SEC_RX = GPIO_NUM_17; // A1, second from usb-c end
 const gpio_num_t GPIO_NUM_SEC_TX = GPIO_NUM_18; // A0, first from usb-c end
-const uint32_t UART_BAUD_RATE = 38400;
+const uint32_t UART_BAUD_RATE = 115200;
 
 const gpio_num_t GPIO_NUM_I2C_SEC_SDA = GPIO_NUM_18;
 const gpio_num_t GPIO_NUM_I2C_SEC_SCL = GPIO_NUM_17;
@@ -73,7 +74,9 @@ typedef struct {
     float x;
     float y;
     float z;
+    uint8_t crc; // crc8 checksum of x, y, z, must be last field in struct  
 } vector________t;
+const uint8_t SIZE_OF_VECTOR_T = sizeof(vector________t);
 
 typedef struct {
     float x;

@@ -5,7 +5,7 @@
 
 #include "disp/TouchDisplay.h"
 #include "sens/SensorBno085.h"
-#include "sens/SensorRotEnc.h"
+// #include "sens/SensorRotEnc.h"
 #include "coms/ModuleWifi.h"
 #include "coms/UartSrv.h"
 // #include "coms/I2cSrvPri.h"
@@ -24,7 +24,7 @@ void runLoopTaskPri(void* pvParameters) {
   uint64_t millisA;
   uint64_t millisB;
 
-  // vTaskDelay(1);
+  vTaskDelay(1);
   while (true) {
 
     millisA = millis();
@@ -38,10 +38,12 @@ void runLoopTaskPri(void* pvParameters) {
         // NowSrv::sendData(orientation);
         UartSrv::sendData(SensorBno085::getOrientation());
       }
-    }
+    } 
+    taskYIELD();
+    // else {
+    //   vTaskDelay(1); // TODO :: find out if zero delay is possible, or if a small delay is needed to avoid starving other tasks
+    // }
      
-    vTaskDelay(1); // TODO :: find out if zero delay is possible, or if a small delay is needed to avoid starving other tasks
-
     millisB = millis();
     totalLoopPriCount++;
 
@@ -57,7 +59,7 @@ void runLoopTaskSec(void* pvParameters) {
   while (true) {
 
     if (wire1HasBegun) {
-      SensorRotEnc::read(); // read the rotary encoder
+      // SensorRotEnc::read(); // read the rotary encoder
     }
 
     vTaskDelay(100);
@@ -78,7 +80,8 @@ void runLoopTaskTri(void* pvParameters) {
       // TODO :: send new data (uart or i2c, will beed slipring protocol POC)
       // vector________t sendData = SensorOrientation::getOrientation();
       // Serial.printf("{\"x\":%s,\"y\":%s,\"z\":%s} - %s - %s\n", String(sendData.x, 2), String(sendData.y, 2), String(sendData.z, 2), String(NowSrv::totalSendCount), String(NowSrv::totalSendCount * 1000 / (millis() - NowSrv::firstSendMillis)));
-      Serial.printf("%s - %s - %s\n", String(SensorBno085::totalReadCount), String(SensorBno085::totalReadCount * 1000.0 / (millis() - SensorBno085::firstReadMillis)), String(SensorRotEnc::getPosition()));
+      //Serial.printf("%s - %s - %s\n", String(SensorBno085::totalReadCount), String(SensorBno085::totalReadCount * 1000.0 / (millis() - SensorBno085::firstReadMillis)), String(SensorRotEnc::getPosition()));
+      Serial.printf("%s - %s\n", String(SensorBno085::totalReadCount), String(SensorBno085::totalReadCount * 1000.0 / (millis() - SensorBno085::firstReadMillis)));
 
     }
 
@@ -101,7 +104,7 @@ void setup() {
   Serial.println("- touch display ready");
 
   // initialize wire1 at 400mHz (default I2C is used for touch display, so we need a second I2C bus for orientation sensor)
-  wire1HasBegun = Wire1.begin(GPIO_NUM___SDA1, GPIO_NUM___SCL1, 200000); //  , I2C_FREQ__WIRE1);
+  wire1HasBegun = Wire1.begin(GPIO_NUM___SDA1, GPIO_NUM___SCL1, 300000); //  , I2C_FREQ__WIRE1);
   if (wire1HasBegun) {
     delay(100);
     Serial.println("- wire1 ready");
@@ -116,12 +119,12 @@ void setup() {
     Serial.println("! orientation not ready");
   }
 
-  if (SensorRotEnc::powerup()) {
-    delay(100);
-    Serial.println("- encoder ready");
-  } else {
-    Serial.println("! encoder not ready");
-  }
+  // if (SensorRotEnc::powerup()) {
+  //   delay(100);
+  //   Serial.println("- encoder ready");
+  // } else {
+  //   Serial.println("! encoder not ready");
+  // }
 
    if (UartSrv::powerup()) {
     delay(100);

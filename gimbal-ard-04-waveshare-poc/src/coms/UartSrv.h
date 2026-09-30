@@ -4,6 +4,7 @@
 #include <Arduino.h>
 
 #include "Define.h"
+#include "util/ComsUtil.h"
 
 class UartSrv {
 
