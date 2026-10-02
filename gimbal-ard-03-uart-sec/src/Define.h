@@ -19,13 +19,13 @@
 
 // QT PY        ┌────┐
 //          ┌───┤    ├───┐
-//  SDA1 18 │O  └────┘  O│    5V
-//  SCL1 17 │O          O│    GND
-//    CS 09 │O          O│    3V3
+//    TX 18 │O  └────┘  O│    5V
+//    RX 17 │O          O│    GND
+//    EN 09 │O          O│    3V3
 //   FLT 08 │O          O│ 35 MO
 //    M1 07 │O          O│ 37 MI
 //    M2 06 │O          O│ 36 SCK
-//    M3 05 │O          O│ 16 EN
+//    M3 05 │O          O│ 16 CS
 //          └────────────┘
 // https://learn.adafruit.com/adafruit-qt-py-esp32-s3/pinouts
 
@@ -50,11 +50,11 @@ const gpio_num_t GPIO_NUM_I2C_SEC_SCL = GPIO_NUM_2;
 
 #if USE_____QTPY == true
 
-const gpio_num_t GPIO_NUM_ENC_CS = GPIO_NUM_8;
+const gpio_num_t GPIO_NUM_ENC_CS = GPIO_NUM_16;
 const gpio_num_t GPIO_NUM_MOT_M1 = GPIO_NUM_7;
 const gpio_num_t GPIO_NUM_MOT_M2 = GPIO_NUM_6;
 const gpio_num_t GPIO_NUM_MOT_M3 = GPIO_NUM_5;
-const gpio_num_t GPIO_NUM_MOT_EN = GPIO_NUM_16;
+const gpio_num_t GPIO_NUM_MOT_EN = GPIO_NUM_9;
 
 const gpio_num_t GPIO_NUM_SEC_RX = GPIO_NUM_17; // A1, second from usb-c end
 const gpio_num_t GPIO_NUM_SEC_TX = GPIO_NUM_18; // A0, first from usb-c end
