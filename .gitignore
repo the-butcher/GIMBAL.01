@@ -1,3 +1,4 @@
 *.skb
 *.sec
 *_bak.skp
+parts/*.*
