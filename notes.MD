@@ -40,6 +40,7 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
   - revisit arms, calculations(?), larger (?)
   - bajonett plate, allow for parts and cables
   - shutter button half press design
+  - better closure between pri and sec
 - ✔️ design arms in a DIYable way
 - ✔️ think about cable management
 - ❓find a shop that does black aluminum anodizing (prize?)
