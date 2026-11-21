@@ -36,22 +36,19 @@ botland 8.5mm :: 22€ :: https://botland.de/gleitgelenke/7146-8-adriger-schleif
 # next steps
 
 - iterate on handle design
-  - 1/4 thread must meet a sufficiently torque resistant handle
-  - motor must be mounted sufficiently torque resistant
+  - better closure for arm_sec
+  - revisit arms, calculations(?), larger (?)
+  - bajonett plate, allow for parts and cables
   - shutter button half press design
-  - smooth motion of button next to wheel
-  - wheel opening smooth corners
-- find a camera cad model or create a rough model from own measurements
-- design arms in a DIYable way
-- think about cable management
-  - check manuals of small gimbals
-- find a shop that does black aluminum anodizing (prize?)
+- ✔️ design arms in a DIYable way
+- ✔️ think about cable management
+- ❓find a shop that does black aluminum anodizing (prize?)
 
 # needed evaluation
 
 - ✔️ correct resistor values for the voltage divider need to be determined
 - ✔️ powering the waveshare amoled through 5V
-- ✔️powering any single device through usb
+- ✔️ powering any single device through usb
   - 〰️ puts 5V on the 12V line
   - 〰️ does not damage the stepdown converter
 - 〰️ test with schottky diode :: likely works
